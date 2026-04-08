@@ -50,32 +50,47 @@ publishing {
       }
     }
   }
+  val nexusUsername = System.getenv("NEXUS_USERNAME") ?: ""
+  val nexusPassword = System.getenv("NEXUS_PASSWORD") ?: ""
   repositories {
+//    maven {
+//      name = "local"
+//      val releasesRepoUrl = layout.buildDirectory.dir("repos/releases")
+//      val snapshotsRepoUrl = layout.buildDirectory.dir("repos/snapshots")
+//      url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
+//    }
     maven {
-      name = "local"
-      val releasesRepoUrl = layout.buildDirectory.dir("repos/releases")
-      val snapshotsRepoUrl = layout.buildDirectory.dir("repos/snapshots")
-      url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
+      url =
+        if (version.toString().endsWith("-SNAPSHOT")) {
+          "https://nexus.flexis.team/repository/maven-snapshots/"
+        } else {
+          "https://nexus.flexis.team/repository/maven-releases/"
+        }.let { uri(it) }
+
+      credentials {
+        username = nexusUsername
+        password = nexusPassword
+      }
     }
   }
 }
 
-signing {
-  setRequired({
-    gradle.taskGraph.hasTask(":${project.name}:publishMaven-publishPublicationToNmcpRepository")
-  })
-  val signingKeyId =
-    System.getenv("SIGNING_KEY_ID").takeUnless { it.isNullOrEmpty() }
-      ?: extra["SIGNING_KEY_ID"].toString()
-  val signingPassword =
-    System.getenv("SIGNING_PASSWORD").takeUnless { it.isNullOrEmpty() }
-      ?: extra["SIGNING_PASSWORD"].toString()
-  val signingKey =
-    System.getenv("SIGNING_KEY").takeUnless { it.isNullOrEmpty() }
-      ?: extra["SIGNING_KEY"].toString()
-  useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-  sign(publishing.publications["maven-publish"])
-}
+//signing {
+//  setRequired({
+//    gradle.taskGraph.hasTask(":${project.name}:publishMaven-publishPublicationToNmcpRepository")
+//  })
+//  val signingKeyId =
+//    System.getenv("SIGNING_KEY_ID").takeUnless { it.isNullOrEmpty() }
+//      ?: extra["SIGNING_KEY_ID"].toString()
+//  val signingPassword =
+//    System.getenv("SIGNING_PASSWORD").takeUnless { it.isNullOrEmpty() }
+//      ?: extra["SIGNING_PASSWORD"].toString()
+//  val signingKey =
+//    System.getenv("SIGNING_KEY").takeUnless { it.isNullOrEmpty() }
+//      ?: extra["SIGNING_KEY"].toString()
+//  useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+//  sign(publishing.publications["maven-publish"])
+//}
 
 // This allows specifying deps to be shadowed so that they don't get included in the POM file
 val shadowImplementation by configurations.creating

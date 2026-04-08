@@ -54,22 +54,22 @@ publishing {
   }
 }
 
-signing {
-  setRequired({
-    gradle.taskGraph.hasTask(":${project.name}:publishMaven-publishPublicationToNmcpRepository")
-  })
-  val signingKeyId =
-    System.getenv("SIGNING_KEY_ID").takeUnless { it.isNullOrEmpty() }
-      ?: extra["SIGNING_KEY_ID"].toString()
-  val signingPassword =
-    System.getenv("SIGNING_PASSWORD").takeUnless { it.isNullOrEmpty() }
-      ?: extra["SIGNING_PASSWORD"].toString()
-  val signingKey =
-    System.getenv("SIGNING_KEY").takeUnless { it.isNullOrEmpty() }
-      ?: extra["SIGNING_KEY"].toString()
-  useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-  sign(publishing.publications["maven-publish"])
-}
+//signing {
+//  setRequired({
+//    gradle.taskGraph.hasTask(":${project.name}:publishMaven-publishPublicationToNmcpRepository")
+//  })
+//  val signingKeyId =
+//    System.getenv("SIGNING_KEY_ID").takeUnless { it.isNullOrEmpty() }
+//      ?: extra["SIGNING_KEY_ID"].toString()
+//  val signingPassword =
+//    System.getenv("SIGNING_PASSWORD").takeUnless { it.isNullOrEmpty() }
+//      ?: extra["SIGNING_PASSWORD"].toString()
+//  val signingKey =
+//    System.getenv("SIGNING_KEY").takeUnless { it.isNullOrEmpty() }
+//      ?: extra["SIGNING_KEY"].toString()
+//  useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+//  sign(publishing.publications["maven-publish"])
+//}
 
 java {
   toolchain { languageVersion = JavaLanguageVersion.of(17) }
