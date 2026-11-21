@@ -50,8 +50,7 @@ publishing {
       }
     }
   }
-  val nexusUsername = System.getenv("NEXUS_USERNAME") ?: ""
-  val nexusPassword = System.getenv("NEXUS_PASSWORD") ?: ""
+  val flexusToken = System.getenv("FLEXUS_TOKEN") ?: ""
   repositories {
 //    maven {
 //      name = "local"
@@ -62,14 +61,14 @@ publishing {
     maven {
       url =
         if (version.toString().endsWith("-SNAPSHOT")) {
-          "https://nexus.flexis.team/repository/maven-snapshots/"
+          "https://flexus.flexis.team/repository/maven-snapshots/"
         } else {
-          "https://nexus.flexis.team/repository/maven-releases/"
+          "https://flexus.flexis.team/repository/maven-releases/"
         }.let { uri(it) }
 
       credentials {
-        username = nexusUsername
-        password = nexusPassword
+        username = "flexus"
+        password = flexusToken
       }
     }
   }
